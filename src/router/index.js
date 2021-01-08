@@ -1,27 +1,57 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Home from '../views/Home.vue'
+import Login from '../components/Login.vue'
+import MovieList from '../components/movie/recommend.vue'
+import Classify from '../components/movie/classification.vue'
+import HotRecommendList from '../components/movie/hotRecommendList.vue'
+import ForYouRecommendList from '../components/movie/forYouRecommendList.vue'
+import Home from '../components/home.vue'
+import SearchList from '../components/movie/seachList.vue'
 
 Vue.use(VueRouter)
 
-const routes = [
-  {
-    path: '/',
-    name: 'Home',
-    component: Home
-  },
-  {
-    path: '/about',
-    name: 'About',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
-  }
+const originalPush = VueRouter.prototype.push
+VueRouter.prototype.push = function push(location) {
+	return originalPush.call(this, location).catch(err => err)
+}
+
+const routes = [{
+		path: '/',
+		redirect: '/login'
+	},
+	{
+		path: '/login',
+		component: Login
+	},
+	{
+		path: '/home',
+		component: Home,
+		children: [{
+				path: '/movieList',
+				component: MovieList
+			},
+			{
+				path: '/classification',
+				component: Classify
+			},
+			{
+				path: '/hotRecommendList',
+				component: HotRecommendList
+			},
+			{
+				path: '/forYouRecommendList',
+				component: ForYouRecommendList
+			},
+			{
+				path: '/searchList',
+				component: SearchList
+			}
+		]
+	}
 ]
 
 const router = new VueRouter({
-  routes
+	routes
 })
 
 export default router

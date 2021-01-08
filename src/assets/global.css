@@ -1,0 +1,5 @@
+html, body, #app{
+	height: 100%;
+	padding: 0;
+}
+/*推荐头像去掉radio的小圆点*/
