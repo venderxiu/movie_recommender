@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.moviedemo.dao.MoviesDao">
+
+    <resultMap type="com.example.moviedemo.entity.Movies" id="MoviesMap">
+        <result property="movieid" column="movieID" jdbcType="INTEGER"/>
+        <result property="title" column="title" jdbcType="VARCHAR"/>
+        <result property="genres" column="genres" jdbcType="VARCHAR"/>
+        <result property="cover" column="cover" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="MoviesMap">
+        select
+          movieID, title, genres, cover
+        from movieProject.Movies
+        where movieID = #{movieid}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="MoviesMap">
+        select
+          movieID, title, genres, cover
+        from movieProject.Movies
+        limit #{offset}, #{limit}
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAll" resultMap="MoviesMap">
+        select
+        movieID, title, genres, cover
+        from movieProject.Movies
+        <where>
+            <if test="movieid != null">
+                and movieID = #{movieid}
+            </if>
+            <if test="title != null and title != ''">
+                and title = #{title}
+            </if>
+            <if test="genres != null and genres != ''">
+                and genres = #{genres}
+            </if>
+            <if test="cover != null and cover != ''">
+                and cover = #{cover}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="movieid" useGeneratedKeys="true">
+        insert into movieProject.Movies(title, genres,cover)
+        values (#{title}, #{genres}, #{cover})
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update movieProject.Movies
+        <set>
+            <if test="title != null and title != ''">
+                title = #{title},
+            </if>
+            <if test="genres != null and genres != ''">
+                genres = #{genres},
+            </if>
+            <if test="cover != null and cover != ''">
+                and cover = #{cover}
+            </if>
+        </set>
+        where movieID = #{movieid}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from movieProject.Movies where movieID = #{movieid}
+    </delete>
+
+    <!--查找类型电影-->
+    <select id="typeByPage" resultMap="MoviesMap">
+        select * from Movies
+        where genres like #{type}
+        limit #{now}, #{rows}
+    </select>
+    <!--查找类型电影数量-->
+    <select id="typeMoviesTotal" resultType="Long">
+        select count(movieID) from Movies
+        where genres like #{type}
+    </select>
+
+
+    <!--查找所有movies 返回所有电影列表    -->
+    <select id="selectAllMovies" resultMap="MoviesMap">
+        select *
+        from movieProject.Movies
+    </select>
+
+    <!-- 通过电影名称关键词查询数据(模糊查询)   -->
+    <select id="selectKeyWords" resultMap="MoviesMap">
+        select *
+        from movieProject.Movies
+        where title like concat(concat("%",#{title}),"%")
+        limit #{now},#{rows}
+    </select>
+    <!--模糊查询总数-->
+    <select id="searchSize" resultType="Long">
+        select count(*)
+        from movieProject.Movies
+        where title like concat(concat("%",#{title}),"%")
+    </select>
+</mapper>

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="src.main.java.com.example.moviedemo.dao.ScoresDao">
+
+    <resultMap type="com.example.moviedemo.entity.Scores" id="ScoresMap">
+        <result property="userid" column="userID" jdbcType="INTEGER"/>
+        <result property="movieid" column="movieID" jdbcType="INTEGER"/>
+        <result property="rating" column="rating" jdbcType="NUMERIC"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="ScoresMap">
+        select
+          userID, movieID, rating
+        from movieProject.Scores
+        where userID = #{userid}
+    </select>
+
+
+    <!--查询平均评分前20的电影作为热门电影   -->
+    <select id="queryHotMovie" resultMap="ScoresMap">
+        select movieID,
+               avg(rating)
+        from movieProject.Scores
+        group by movieID
+        order by avg(rating)
+            desc
+        limit 0,20
+    </select>
+
+</mapper>

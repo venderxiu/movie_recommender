@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="src.main.java.com.example.moviedemo.dao.UsersDao">
+
+    <resultMap type="com.example.moviedemo.entity.Users" id="UsersMap">
+        <result property="userid" column="userID" jdbcType="INTEGER"/>
+        <result property="name" column="name" jdbcType="VARCHAR"/>
+        <result property="password" column="password" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="UsersMap">
+        select
+          userID, name, password
+        from movieProject.Users
+        where userID = #{userid}
+    </select>
+
+</mapper>

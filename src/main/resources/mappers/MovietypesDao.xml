@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.moviedemo.dao.MovietypesDao">
+
+    <resultMap type="com.example.moviedemo.entity.Movietypes" id="MovietypesMap">
+        <result property="mtypeid" column="MTypeID" jdbcType="INTEGER"/>
+        <result property="typename" column="TypeName" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="MovietypesMap">
+        select
+          MTypeID, TypeName
+        from movieProject.MovieTypes
+        where MTypeID = #{mtypeid}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="MovietypesMap">
+        select
+          MTypeID, TypeName
+        from movieProject.MovieTypes
+        limit #{offset}, #{limit}
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAll" resultMap="MovietypesMap">
+        select
+        MTypeID, TypeName
+        from movieProject.MovieTypes
+        <where>
+            <if test="mtypeid != null">
+                and MTypeID = #{mtypeid}
+            </if>
+            <if test="typename != null and typename != ''">
+                and TypeName = #{typename}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="mtypeid" useGeneratedKeys="true">
+        insert into movieProject.MovieTypes(TypeName)
+        values (#{typename})
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update movieProject.MovieTypes
+        <set>
+            <if test="typename != null and typename != ''">
+                TypeName = #{typename},
+            </if>
+        </set>
+        where MTypeID = #{mtypeid}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from movieProject.MovieTypes where MTypeID = #{mtypeid}
+    </delete>
+
+</mapper>
