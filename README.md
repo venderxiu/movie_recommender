@@ -1,5 +1,5 @@
 # movie_recommend
-
+电影推荐系统前端
 ## Project setup
 ```
 npm install
